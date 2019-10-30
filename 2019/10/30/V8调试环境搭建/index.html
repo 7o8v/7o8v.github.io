@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>V8调试环境搭建 | 7o8v&#39;s blog</title>
+  <meta name="keywords" content=" Browser , JavascriptEngine , Chrome , V8 ">
+  <meta name="description" content="V8调试环境搭建 | 7o8v&#39;s blog">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Syclover Binary security researcher 成都信息工程大学">
+<meta name="keywords" content="binary">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About 7o8v">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.7o8v.me&#x2F;about&#x2F;index.html">
+<meta property="og:site_name" content="7o8v&#39;s blog">
+<meta property="og:description" content="Syclover Binary security researcher 成都信息工程大学">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-10-30T06:51:10.899Z">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/sublime.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>7o8v</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/joshua7o8v" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:269134615@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(5)</small></div></li>
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  hasFriend  site_url"  href="/about">关于</a><a style="width: 50%"  class="friends">友链</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="5">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://redteam.today/">cl0und</a></li>
+            
+            <li><a target="_blank" href="https://evoa.me/">evoa</a></li>
+            
+            <li><a target="_blank" href="http://kkdlong.win/">kkdlong</a></li>
+            
+            <li><a target="_blank" href="https://blog.l0ca1.xyz/">l0ca1</a></li>
+            
+            <li><a target="_blank" href="http://abcdefghijklmnopqrst.xyz/">骑麦兜看落日</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode==13){return false;}">
+        <input class="search" type="text" placeholder="以 in: 开头进行全文搜索" autocomplete="off"id="local-search-input" >
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">Browser</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">JavascriptEngine</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">Chrome</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">V8</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">CTF</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color5">JavascriptCore</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">Webkit</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        <a  class=""
+           href="/2019/10/30/35C3-CTF-krautflare-exploit/"
+           data-tag="Browser,JavascriptEngine,Chrome,V8,CTF"
+           data-author="" >
+            <span class="post-title" title="35C3 CTF krautflare exploit">35C3 CTF krautflare exploit</span>
+            <span class="post-date" title="2019-10-30 18:36:16">2019/10/30</span>
+        </a>
+        
+        <a  class=""
+           href="/2019/10/30/V8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+           data-tag="Browser,JavascriptEngine,Chrome,V8"
+           data-author="" >
+            <span class="post-title" title="V8调试环境搭建">V8调试环境搭建</span>
+            <span class="post-date" title="2019-10-30 18:36:34">2019/10/30</span>
+        </a>
+        
+        <a  class=""
+           href="/2019/10/30/Javascript-engine-exploit-3/"
+           data-tag="Browser,JavascriptEngine,JavascriptCore,Webkit"
+           data-author="" >
+            <span class="post-title" title="Javascript engine exploit 3">Javascript engine exploit 3</span>
+            <span class="post-date" title="2019-10-30 15:49:10">2019/10/30</span>
+        </a>
+        
+        <a  class=""
+           href="/2019/10/30/Javascript-engine-exploit-1/"
+           data-tag="Browser,JavascriptEngine,JavascriptCore,Webkit"
+           data-author="" >
+            <span class="post-title" title="Javascript engine exploit 1">Javascript engine exploit 1</span>
+            <span class="post-date" title="2019-10-30 14:19:27">2019/10/30</span>
+        </a>
+        
+        <a  class=""
+           href="/2019/10/30/Javascript-engine-exploit-2/"
+           data-tag="Browser,JavascriptEngine,JavascriptCore,Webkit"
+           data-author="" >
+            <span class="post-title" title="Javascript engine exploit 2">Javascript engine exploit 2</span>
+            <span class="post-date" title="2019-10-30 15:49:07">2019/10/30</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-V8调试环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">V8调试环境搭建</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+        <span class="tag">
+            
+            <a href="javascript:" class="color3">Browser</a>
+            
+            <a href="javascript:" class="color2">JavascriptEngine</a>
+            
+            <a href="javascript:" class="color2">Chrome</a>
+            
+            <a href="javascript:" class="color3">V8</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2019-10-30 18:38:39'>2019-10-30 18:36</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#平台"><span class="toc-text">平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#搭建步骤"><span class="toc-text">搭建步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#搭建Turbolizer"><span class="toc-text">搭建Turbolizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#V8的GDB支持"><span class="toc-text">V8的GDB支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch-V8"><span class="toc-text">Patch V8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Recommended"><span class="toc-text">Recommended</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>准备写点关于V8的文章，这一篇主要介绍如何搭建环境和推荐一些阅读资料。</p>
+<h3 id="平台"><a href="#平台" class="headerlink" title="平台"></a>平台</h3><ul>
+<li>Ubuntu 18.04.02 x64</li>
+</ul>
+<h3 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h3><p>以下步骤是我从安装完虚拟机开始执行的。</p>
+<ol>
+<li><p>更换源</p>
+<pre><code class="bash">$ sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+$ sudo gedit /etc/apt/sources.list</code></pre>
+<pre><code>deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse</code></pre></li>
+<li><p>更新apt</p>
+<pre><code class="shell">$ sudo apt update</code></pre>
+</li>
+<li><p>安装依赖</p>
+<pre><code class="shell">$ sudo apt-get install binutils python2.7 perl socat git build-essential gdb gdbserver pkg-config curl re2c
+$ sudo ln -s /usr/bin/python2.7 /usr/bin/python</code></pre>
+</li>
+<li><p>设置代理</p>
+<ol>
+<li><p>git代理</p>
+<pre><code class="shell">$ gedit ~/.gitconfig</code></pre>
+<pre><code>[http]
+    proxy = socks5://ip:1080
+[https]
+    proxy = socks5://ip:1080</code></pre></li>
+<li><p>环境变量代理</p>
+<pre><code class="shell">$ gedit ~/.bashrc</code></pre>
+<pre><code class="bash">export http_proxy=http://ip:1080
+#注意不能使用https
+export https_proxy=http://ip:1080</code></pre>
+</li>
+<li><p>配置boto代理（gclient不能直接使用socks代理）</p>
+<pre><code class="shell">$ gedit ~/.boto_proxy
+[Boto]
+proxy = ip
+proxy_port = 1080
+$ echo &quot;export NO_AUTH_BOTO_CONFIG=$HOME/.boto_proxy&quot; &gt;&gt; ~/.bashrc
+$ source ~/.bashrc
+</code></pre>
+</li>
+</ol>
+</li>
+<li><p>安装GDB插件</p>
+<pre><code class="shell">$ git clone https://github.com/scwuaptx/peda.git ~/peda
+$ git clone https://github.com/pwndbg/pwndbg.git ~/pwndbg &amp;&amp; pushd ~/pwndbg &amp;&amp; ~/pwndbg/setup.sh &amp;&amp; popd
+</code></pre>
+</li>
+<li><p>获取并配置depop_tool</p>
+<pre><code class="bash">$ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ~/depot_tools
+$ echo &quot;export PATH=$PATH:$HOME/depot_tools&quot; &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc
+</code></pre>
+</li>
+<li><p>获取并配置ninja</p>
+<pre><code class="bash">$ git clone https://github.com/ninja-build/ninja.git ~/ninja
+$ pushd ninja &amp;&amp; ./configure.py --bootstrap &amp;&amp; popd
+$ echo &quot;export PATH=$PATH:$HOME/ninja&quot; &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc
+</code></pre>
+</li>
+<li><p>增加swap空间</p>
+<p>编译时如果swap空间不够会造成编译失败</p>
+<pre><code class="bash">#查看swap空间
+free -m 
+#创建swap文件
+$ sudo mkdir /swap &amp;&amp; cd /swap
+#这里设定为4个G的大小
+$ sudo dd if=/dev/zero of=swapfile bs=1024 count=4000000
+$ sudo mkswap -f swapfile
+#使文件生效
+$ sudo swapon swapfile
+#再次查看就可看到已经扩容成功
+
+#将该配置写入/etc/fstab，在文件后面追加内容
+/swap/swapfile /swap swap defaults 0 0
+
+#如果需要卸载swap文件，执行以下命令并删除配置内容就行了
+#$ sudo swapoff swapfile 
+
+</code></pre>
+</li>
+</ol>
+<pre><code>
+9. 获取V8并编译
+
+   ```bash
+   #命令使用过程中很可能会因为环境问题或者网络问题中断，如果中断就将当前目录文件全部删除并重试。
+   #rm .gclient* &amp;&amp; rm -rf v8
+   #如果发现不是网络问题请对照上面的配置步骤查看是否环境出了问题（主要看依赖和代理配置）。
+   $ fetch v8
+   $ cd v8 &amp;&amp; gclient sync
+   $ tools/dev/v8gen.py x64.debug
+   $ ninja -C out.gn/x64.debug
+</code></pre><ol start="10">
+<li><p>启动</p>
+<pre><code class="bash">$ ./out/x64.debug/d8 
+$ ./out/x64.debug/shell 
+</code></pre>
+</li>
+</ol>
+<h3 id="搭建Turbolizer"><a href="#搭建Turbolizer" class="headerlink" title="搭建Turbolizer"></a>搭建Turbolizer</h3><p>Turbolizer是一个基于HTML的分析工具，能够可视化Turbofan pipeline各个阶段优化产生的代码。工具可在<code>v8/tools/turbolizer</code>中找到。</p>
+<p>切换到turbolizer目录之后，搭建步骤：</p>
+<pre><code class="bash">$ npm i #有可能比较慢，如果有cnpm可执行 $ cnpm install
+$ npm run-script build #sudo cnpm run-script build
+#也可以部署到其他目录
+$ npm run deploy -- /www/turbolizer
+#在当前目录或者是部署的目标目录开启一个http服务，然后去访问就可以使用工具了。
+$ python -m SimpleHTTPServer 8000
+</code></pre>
+<p>如果搭建失败可能是因为分支的问题，切换到master分支或者是其他分支再试试。</p>
+<p>部署的时候出现以下输出是正常的：</p>
+<pre><code>$ sudo cnpm run-script build
+[sudo] password for qwq: 
+
+&gt; turbolizer@0.1.0 build /home/qwq/Documents/Browser/v8/tools/turbolizer
+&gt; rollup -c
+
+
+src/turbo-visualizer.ts → build/turbolizer.js...
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/graphmultiview.ts(98,29): semantic error TS2345 Argument of type &#39;GraphView&#39; is not assignable to parameter of type &#39;PhaseView&#39;.
+  Types of property &#39;detachSelection&#39; are incompatible.
+    Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+      Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+        Type &#39;unknown&#39; is not assignable to type &#39;string&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/graphmultiview.ts(100,29): semantic error TS2345 Argument of type &#39;ScheduleView&#39; is not assignable to parameter of type &#39;PhaseView&#39;.
+  Types of property &#39;detachSelection&#39; are incompatible.
+    Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+      Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/graphmultiview.ts(102,29): semantic error TS2345 Argument of type &#39;SequenceView&#39; is not assignable to parameter of type &#39;PhaseView&#39;.
+  Types of property &#39;detachSelection&#39; are incompatible.
+    Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+      Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/code-view.ts(176,9): semantic error TS2304 Cannot find name &#39;PR&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/text-view.ts(149,57): semantic error TS2345 Argument of type &#39;unknown&#39; is not assignable to parameter of type &#39;string&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/graph-view.ts(371,3): semantic error TS2416 Property &#39;detachSelection&#39; in type &#39;GraphView&#39; is not assignable to the same property in base type &#39;PhaseView&#39;.
+  Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+    Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+      Type &#39;unknown&#39; is not assignable to type &#39;string&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/schedule-view.ts(33,3): semantic error TS2416 Property &#39;detachSelection&#39; in type &#39;ScheduleView&#39; is not assignable to the same property in base type &#39;TextView&#39;.
+  Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+    Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+      Type &#39;unknown&#39; is not assignable to type &#39;string&#39;.
+(!) /home/qwq/Documents/Browser/v8/tools/turbolizer/src/sequence-view.ts(33,3): semantic error TS2416 Property &#39;detachSelection&#39; in type &#39;SequenceView&#39; is not assignable to the same property in base type &#39;TextView&#39;.
+  Type &#39;() =&gt; Set&lt;unknown&gt;&#39; is not assignable to type &#39;() =&gt; Set&lt;string&gt;&#39;.
+    Type &#39;Set&lt;unknown&gt;&#39; is not assignable to type &#39;Set&lt;string&gt;&#39;.
+      Type &#39;unknown&#39; is not assignable to type &#39;string&#39;.
+(!) Circular dependency: src/edge.ts -&gt; src/node.ts -&gt; src/edge.ts
+created build/turbolizer.js in 6.5s
+
+</code></pre><p>最好使用Chrome去访问并使用该工具。</p>
+<h3 id="V8的GDB支持"><a href="#V8的GDB支持" class="headerlink" title="V8的GDB支持"></a>V8的GDB支持</h3><p>在tools目录下有两个文件：</p>
+<pre><code>v8/tools/gdbinit
+v8/tools/gdb-v8-support.py
+</code></pre><p>只需要在<code>~/.gdbinit</code>中source这两个文件就可以了，需要注意的是这些调试命令只能在debug版本的d8中才会生效，release不行，缺少导出符号。</p>
+<p>关于gdb命令的使用都可以直接查看这两个文件的内容，里面有关于命令的注释。</p>
+<p>另外，开启<code>--allow-natives-syntax</code>时可以使用的native syntax：<a href="https://gist.github.com/totherik/3a4432f26eea1224ceeb" target="_blank" rel="noopener">https://gist.github.com/totherik/3a4432f26eea1224ceeb</a></p>
+<h3 id="Patch-V8"><a href="#Patch-V8" class="headerlink" title="Patch V8"></a>Patch V8</h3><p>假如有如下patch文件内容：</p>
+<pre><code class="DIFF">diff --git a/src/bootstrapper.cc b/src/bootstrapper.cc
+index b027d36..ef1002f 100644
+--- a/src/bootstrapper.cc
++++ b/src/bootstrapper.cc
+@@ -1668,6 +1668,8 @@ void Genesis::InitializeGlobal(Handle&lt;JSGlobalObject&gt; global_object,
+                           Builtins::kArrayPrototypeCopyWithin, 2, false);
+     SimpleInstallFunction(isolate_, proto, &quot;fill&quot;,
+                           Builtins::kArrayPrototypeFill, 1, false);
++    SimpleInstallFunction(isolate_, proto, &quot;oob&quot;,
++                          Builtins::kArrayOob,2,false);
+     SimpleInstallFunction(isolate_, proto, &quot;find&quot;,
+                           Builtins::kArrayPrototypeFind, 1, false);
+     SimpleInstallFunction(isolate_, proto, &quot;findIndex&quot;,
+diff --git a/src/builtins/builtins-array.cc b/src/builtins/builtins-array.cc
+index 8df340e..9b828ab 100644
+--- a/src/builtins/builtins-array.cc
++++ b/src/builtins/builtins-array.cc
+@@ -361,6 +361,27 @@ V8_WARN_UNUSED_RESULT Object GenericArrayPush(Isolate* isolate,
+   return *final_length;
+ }
+ }  // namespace
++BUILTIN(ArrayOob){
++    uint32_t len = args.length();
++    if(len &gt; 2) return ReadOnlyRoots(isolate).undefined_value();
++    Handle&lt;JSReceiver&gt; receiver;
++    ASSIGN_RETURN_FAILURE_ON_EXCEPTION(
++            isolate, receiver, Object::ToObject(isolate, args.receiver()));
++    Handle&lt;JSArray&gt; array = Handle&lt;JSArray&gt;::cast(receiver);
++    FixedDoubleArray elements = FixedDoubleArray::cast(array-&gt;elements());
++    uint32_t length = static_cast&lt;uint32_t&gt;(array-&gt;length()-&gt;Number());
++    if(len == 1){
++        //read
++        return *(isolate-&gt;factory()-&gt;NewNumber(elements.get_scalar(length)));
++    }else{
++        //write
++        Handle&lt;Object&gt; value;
++        ASSIGN_RETURN_FAILURE_ON_EXCEPTION(
++                isolate, value, Object::ToNumber(isolate, args.at&lt;Object&gt;(1)));
++        elements.set(length,value-&gt;Number());
++        return ReadOnlyRoots(isolate).undefined_value();
++    }
++}
+
+ BUILTIN(ArrayPush) {
+   HandleScope scope(isolate);
+diff --git a/src/builtins/builtins-definitions.h b/src/builtins/builtins-definitions.h
+index 0447230..f113a81 100644
+--- a/src/builtins/builtins-definitions.h
++++ b/src/builtins/builtins-definitions.h
+@@ -368,6 +368,7 @@ namespace internal {
+   TFJ(ArrayPrototypeFlat, SharedFunctionInfo::kDontAdaptArgumentsSentinel)     \
+   /* https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatMap */   \
+   TFJ(ArrayPrototypeFlatMap, SharedFunctionInfo::kDontAdaptArgumentsSentinel)  \
++  CPP(ArrayOob)                                                                \
+                                                                                \
+   /* ArrayBuffer */                                                            \
+   /* ES #sec-arraybuffer-constructor */                                        \
+diff --git a/src/compiler/typer.cc b/src/compiler/typer.cc
+index ed1e4a5..c199e3a 100644
+--- a/src/compiler/typer.cc
++++ b/src/compiler/typer.cc
+@@ -1680,6 +1680,8 @@ Type Typer::Visitor::JSCallTyper(Type fun, Typer* t) {
+       return Type::Receiver();
+     case Builtins::kArrayUnshift:
+       return t-&gt;cache_-&gt;kPositiveSafeInteger;
++    case Builtins::kArrayOob:
++      return Type::Receiver();
+
+     // ArrayBuffer functions.
+     case Builtins::kArrayBufferIsView:
+
+</code></pre>
+<p>将patch内容写入文件，比如<code>vuln.patch</code>。</p>
+<p>使用命令进行patch：</p>
+<pre><code class="BASH">$ git apply vuln.patch
+</code></pre>
+<p>可以用<code>git status</code>查看改动状态：</p>
+<pre><code>$ git status
+HEAD detached at 6dc88c191f
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+    modified:   src/bootstrapper.cc
+    modified:   src/builtins/builtins-array.cc
+    modified:   src/builtins/builtins-definitions.h
+    modified:   src/compiler/typer.cc
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+
+    oob_vuln.patch
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+
+</code></pre><p>准备编译：</p>
+<pre><code class="bash">#添加选项-f后可以不用commit或者stash
+$ gclient sync -f
+#这里使用release是因为这个patch在debug模式会不能生效，使用oob的时候会崩溃，不知道是不是因为我选的分支的问题。
+$ tools/dev/v8gen.py x64.release
+$ ninja -C out.gn/x64.release
+</code></pre>
+<h3 id="Recommended"><a href="#Recommended" class="headerlink" title="Recommended"></a>Recommended</h3><p><a href="http://eternalsakura13.com/2018/05/06/v8/" target="_blank" rel="noopener">v8 exploit | Sakuraのblog</a></p>
+<p><a href="https://saelo.github.io/presentations/blackhat_us_18_attacking_client_side_jit_compilers.pdf" target="_blank" rel="noopener">https://saelo.github.io/presentations/blackhat_us_18_attacking_client_side_jit_compilers.pdf</a></p>
+<p><a href="https://docs.google.com/presentation/d/1H1lLsbclvzyOF3IUR05ZUaZcqDxo7_-8f4yJoxdMooU/edit#slide=id.g18ceb14729_0_221" target="_blank" rel="noopener">An overview of the TurboFan compiler - Google 幻灯片</a></p>
+<p><a href="https://mrale.ph/v8/resources.html" target="_blank" rel="noopener">V8 Resources</a></p>
+<p><a href="https://github.com/danbev/learning-v8/blob/master/README.md" target="_blank" rel="noopener">learning-v8/README.md at master · danbev/learning-v8</a></p>
+<p><a href="https://v8.dev/docs/turbofan" target="_blank" rel="noopener">TurboFan · V8</a></p>
+<p><a href="https://www.jfokus.se/jfokus18/preso/Escape-Analysis-in-V8.pdf" target="_blank" rel="noopener">https://www.jfokus.se/jfokus18/preso/Escape-Analysis-in-V8.pdf</a></p>
+<p><a href="https://mrale.ph/blog/2012/06/03/explaining-js-vms-in-js-inline-caches.html" target="_blank" rel="noopener">https://mrale.ph/blog/2012/06/03/explaining-js-vms-in-js-inline-caches.html</a></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎联系作者指出任何有错误或不够清晰的表达。 </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>V8调试环境搭建</p>
+    
+    <p><span class="copy-title">本文作者:</span><a href="javascript:void(0)" title="7o8v">7o8v</a></p>
+    <p><span class="copy-title">发布时间:</span>2019-10-30, 18:36:34</p>
+    <p><span class="copy-title">最后更新:</span>2019-10-30, 18:38:39</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2019/10/30/V8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="V8调试环境搭建">http://www.7o8v.me/2019/10/30/V8%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<input type="hidden" id="MathJax-js"
+        value="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</input>
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 7o8v</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" href="javascript:void(0)"></a>
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Browser','#JavascriptEngine','#Chrome','#V8','#CTF','#JavascriptCore','#Webkit',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
